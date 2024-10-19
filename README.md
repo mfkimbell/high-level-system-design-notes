@@ -1,5 +1,9 @@
 # system-design-notes
 
+Good source for drawing diagrams:
+* https://excalidraw.com/
+
+
 Courses I've found:
 
 Crowdsourced a TON of good information:
