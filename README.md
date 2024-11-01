@@ -12,10 +12,12 @@ Crowdsourced a TON of good information:
 
 HelloInterview: (good starting point)
 * https://www.hellointerview.com/learn/system-design/in-a-hurry/how-to-prepare
-* free (from what I can tell)
+* has some notes and more importantly, practice questions
+* 30/month 40/year
   
 DesignGuru:
 * https://www.designgurus.io/path/system-design-interview-playbook?pathSlug=System-Design-Interview-Playbook
+* bunch of organized notes for system design
 * $16/month
 
 
