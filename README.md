@@ -11,6 +11,7 @@ Crowdsourced a TON of good information:
 * free
 
 NeetCode.io
+* https://neetcode.io/practice
 * courses about system design, beginner and intermediate
 * might end up doing the ObjectOriented course too for practice
 * $120 bucks for a year
