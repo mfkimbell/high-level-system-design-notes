@@ -168,6 +168,9 @@ That’s my strong recommendation and I always prefer this pattern. In general, 
 
 * Latency is the time it takes for an individual operation
 
+* Latency can be affected by things like "how far the server is from where i am"
+* Having servers in multiple availability zones can decrease latency by being CLOSER to the request
+
 Single vs. Batch Processing:
 
 * Low Latency: Single processing handles each request immediately, ensuring fast response times but may limit total throughput.
@@ -227,3 +230,10 @@ Eventual consistency means there is a window of time after a write operation whe
 https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#availability-patterns\
 
 This is where I left off on that google page
+
+#### Neetcode
+
+## SSD/HHD (TB) vs RAM (GB)
+* RAM (random access memory) is directly connected to the CPU, it's much much much faster than Disk, 1/10^6 seconds.
+## Cache (MB)
+* Cache is even faster than ram 1/10^9 of a second
