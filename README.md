@@ -140,4 +140,37 @@ When Not to Use Sharding:
 * Strong Consistency Requirements: When cross-shard consistency is crucial and difficult to maintain.
 * Cross-shard Queries: When frequent multi-shard queries could degrade performance or complicate application logic.
 
-  
+## Caching
+* A cache is a simple key-value store and it should reside as a buffering layer between your application and your data storage.
+* Whenever your application has to read data it should at first try to retrieve the data from your cache. Only if it’s not in the cache should it then try to get the data from the main data source.
+* cache is lightning-fast. It holds every dataset in RAM and requests are handled as fast as technically possible.
+
+Two types
+### 1 - Cached Database Queries
+* That’s still the most commonly used caching pattern. Whenever you do a query to your database, you store the result dataset in cache. A hashed version of your query is the cache key.
+* The main issue is the expiration. It is hard to delete a cached result when you cache a complex query (who has not?). When one piece of data changes (for example a table cell) you need to delete all cached queries who may include that table cell. You get the point?
+* Challenge with Invalidation: When data changes in the database (e.g., a product's price is updated), it can be difficult to know which cached queries are affected. If a table cell changes, multiple cached queries might include that cell, and tracking down and invalidating all those specific cache entries can be complex. This is the main issue with using query caching in applications with complex or related data structures.
+
+### 2 - Cached Objects
+That’s my strong recommendation and I always prefer this pattern. In general, see your data as an object like you already do in your code (classes, instances, etc.)
+* you cache objects like a "Class Product {}" gets instanitated, and a bunch of database calls occur filling in the data
+* if the database sees a field has chnaged, it invalidates that cache entry, preventing stale data
+* Reduced Latency: Fetching a fully assembled object from the cache is much faster than making multiple database queries to gather different parts of the product data.
+* It's a **single** cache call instead of many
+* Offloading Database Load: By caching full objects, your database handles fewer read requests because the application can fetch data from the cache instead. This allows the database to focus on write operations and other queries that are not cached.
+* Asynchronous Assembly with Worker Servers: You can set up worker servers that periodically fetch fresh data from the database, assemble complete objects, and store them in the cache.
+* ^ this can help with scalability, it can fetch "popular cache entries" and go ahead and update them during non-peak times to ensure faster responses during peak times
+
+## Throughput vs Latency
+
+
+* Throughput is the amount of operartions per second
+
+* Latency is the time it takes for an individual operation
+
+Single vs. Batch Processing:
+
+* Low Latency: Single processing handles each request immediately, ensuring fast response times but may limit total throughput.
+* High Throughput: Batch processing groups requests, improving overall system capacity but increasing latency for individual operations.
+
+
