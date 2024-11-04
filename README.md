@@ -173,4 +173,29 @@ Single vs. Batch Processing:
 * Low Latency: Single processing handles each request immediately, ensuring fast response times but may limit total throughput.
 * High Throughput: Batch processing groups requests, improving overall system capacity but increasing latency for individual operations.
 
+## Availability vs Consistency
 
+**CAP theorem** states that in a **distributed system**, you can only achieve **two out of three** guarantees: **consistency** (all nodes see the same data), **availability** (every request gets a response), and **partition tolerance** (the system works despite network failures).
+
+##### Real-Life Handling of Partition Tolerance
+
+##### AP Systems (Availability and Partition Tolerance):
+* Example: NoSQL databases like Cassandra, DynamoDB, and other distributed systems often prioritize availability and partition tolerance. These systems continue to respond to requests even when parts of the network are partitioned, accepting that the data might not be the most up-to-date (eventual consistency).
+* Basically, when parts of the database can't communicate with one anohter, we just use the data we have available
+
+##### CP Systems (Consistency and Partition Tolerance):
+* Example: Databases like HBase or systems that use distributed consensus algorithms (e.g., Paxos, Raft) prioritize consistency and partition tolerance. During a partition, these systems ensure that data is consistent, even if that means some parts of the system might become unavailable until the partition is fixed.
+* when we have connection issues, we disable access teh database with faulty network, leaving customers in that area without access to the program
+
+##### Key Mechanisms for Partition Tolerance
+* Replication: Data is replicated across multiple nodes so that if one part of the network is unreachable, other nodes can still respond to user requests.
+* Eventual Consistency: In AP systems, data changes propagate to all nodes over time. Users might get slightly outdated data during a partition, but the system reconciles and ensures consistency once the partition is resolved.
+* Quorum-Based Voting: Some systems use quorum mechanisms to maintain partition tolerance. For a write or read to succeed, a majority of nodes (a quorum) must agree. This balances availability and consistency while maintaining partition tolerance.
+
+###### Eventual consistencey in AP systems
+* During a Partition: When parts of the system cannot communicate with each other, each node or shard continues to serve requests with the data it has. Writes are accepted locally, but they don’t propagate immediately to other nodes due to the partition.
+* After the Partition: Once the partition is resolved and network connectivity is restored, nodes synchronize by exchanging updates to ensure all copies of the data are consistent. This process is often handled by a background reconciliation mechanism or conflict resolution strategy.
+
+Much of this is automatically done in high AP systems
+
+**Simple takeaway**: If you need the system to **always respond**, even if the data might not be **up-to-date**, prioritize making it **highly available**. If your priority is that data should always be **accurate and consistent**, design the system to ensure **data consistency** but be prepared for it to potentially become **unavailable during network issues**.
