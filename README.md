@@ -30,10 +30,15 @@ DesignGuru:
 * https://www.hiredintech.com/system-design/scalability/examples/
 * https://github.com/donnemartin/system-design-primer/blob/master/README.md#real-world-architectures
 
-## Practice
+## System Design Practice
 If you can’t find a friend/coworker, go to a site like HighScalability that contains tons of examples of real-life architectures and compare what you conjured up to what these companies actually did. You’d be surprised how many of the top websites’ architectures are widely available. Keep in mind that these systems were designed by multiple people over multiple months, so don’t expect to be able to come up with every low-level decision they made. Focus on the high-level stuff.
 * https://www.hiredintech.com/system-design/the-twitter-problem/
 * HelloInterview has practice problems, could be worth the 30 bucks
+* https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#system-design-interview-questions-with-solutions
+
+## Object Oriented Design Practice
+* https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#object-oriented-design-interview-questions-with-solutions
+* 
 
 ## Mock interviews
 possibly a free service
@@ -61,6 +66,40 @@ hello interview: $170
 
 
 ## SQL vs NOSQL
+
+* SQL = relational        can do joins in one query in the database
+* NoSQL = non-relational  needs to do multiple queries sometimes to get data
+
+**SQL Join**:
+```sql
+SELECT orders.id, orders.date, customers.name, customers.email 
+FROM orders 
+JOIN customers ON orders.customer_id = customers.id;
+```
+
+**Application-Level Join in a NoSQL Database**:
+1. Query the `orders` collection:
+   ```javascript
+   const orders = db.orders.find({}); // Get all orders
+   ```
+
+2. Use the `customer_id` from each order to query the `customers` collection:
+   ```javascript
+   for (let order of orders) {
+     const customer = db.customers.findOne({ id: order.customer_id });
+     order.customer = customer; // Merge customer data into the order
+   }
+   ```
+
+* Trade-offs in NoSQL: NoSQL databases prioritize scalability, availability, and flexibility, often at the cost of certain relational capabilities like joins.
+* This is why denormalization (storing related data together) is often recommended to avoid needing joins altogether.
+
+### Why This Change Matters:
+- **Performance**: SQL databases are optimized for joins and can handle them efficiently when properly indexed. Moving joins to the application code can introduce performance bottlenecks, especially with large data sets or multiple queries.
+- **Complexity**: Doing joins in code means more manual work and increased code complexity. It requires extra handling for combining datasets, error checking, and ensuring performance does not degrade.
+- **Trade-offs in NoSQL**: NoSQL databases prioritize scalability, availability, and flexibility, often at the cost of certain relational capabilities like joins. This is why denormalization (storing related data together) is often recommended to avoid needing joins altogether.
+
+In summary, SQL databases simplify querying related data with native joins, while in a NoSQL or denormalized SQL setup, you have to handle joins manually in your application code. This can impact performance and code complexity but is sometimes necessary for scaling horizontally and simplifying database structure for distributed systems.
 
 SQL/ACID systems
 * **ACID** (atomicity, consistency, isolation, and durability)
