@@ -212,4 +212,18 @@ True Consistency = Every read receives the most recent write or an error.
 * After a write, reads may or may not see it. A best effort approach is taken.
 * This approach is seen in systems such as memcached. Weak consistency works well in real time use cases such as VoIP, video chat, and realtime multiplayer games. For example, if you are on a phone call and lose reception for a few seconds, when you regain connection you do not hear what was spoken during connection loss.
 
-#### 
+#### Eventual consistency
+
+Eventual consistency means there is a window of time after a write operation where the data might not be the same across all copies of the database. During this period, different nodes or replicas may show different versions of the data, leading to potential inconsistencies.
+* usually a few milliseconds between write and data replication/sychronization
+
+#### Strong consistency
+* data is replicated synchronously
+* Leader-Based Replication: Distributed databases with a primary-replica (leader-follower) architecture often enforce strong consistency by requiring all writes to go through the leader.
+* reads may be delayed until all writes are completed 
+
+
+
+https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#availability-patterns\
+
+This is where I left off on that google page
