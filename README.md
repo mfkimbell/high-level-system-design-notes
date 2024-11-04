@@ -26,6 +26,21 @@ DesignGuru:
 * bunch of organized notes for system design
 * $16/month
 
+## Read some real life examples of architechture
+* https://www.hiredintech.com/system-design/scalability/examples/
+* https://github.com/donnemartin/system-design-primer/blob/master/README.md#real-world-architectures
+
+## Practice
+If you can’t find a friend/coworker, go to a site like HighScalability that contains tons of examples of real-life architectures and compare what you conjured up to what these companies actually did. You’d be surprised how many of the top websites’ architectures are widely available. Keep in mind that these systems were designed by multiple people over multiple months, so don’t expect to be able to come up with every low-level decision they made. Focus on the high-level stuff.
+* https://www.hiredintech.com/system-design/the-twitter-problem/
+* HelloInterview has practice problems, could be worth the 30 bucks
+
+## Mock interviews
+possibly a free service
+* https://www.tryexponent.com/practice?ref=pramp&utm_source=pramp&utm_campaign=pramp_banner
+hello interview: $170
+* https://www.hellointerview.com/learn/system-design/in-a-hurry/how-to-prepare
+
 # Step 1: establish use-cases and Functional Requirements
 
 * Who is going to use it?
