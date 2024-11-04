@@ -179,6 +179,8 @@ Single vs. Batch Processing:
 
 ##### Real-Life Handling of Partition Tolerance
 
+Partitioning = losing connection to other parts of the database, or replicated databases in other areas that are able to recieve writes (wouldn't be an issue in a read only database)
+
 ##### AP Systems (Availability and Partition Tolerance):
 * Example: NoSQL databases like Cassandra, DynamoDB, and other distributed systems often prioritize availability and partition tolerance. These systems continue to respond to requests even when parts of the network are partitioned, accepting that the data might not be the most up-to-date (eventual consistency).
 * Basically, when parts of the database can't communicate with one anohter, we just use the data we have available
@@ -199,3 +201,15 @@ Single vs. Batch Processing:
 Much of this is automatically done in high AP systems
 
 **Simple takeaway**: If you need the system to **always respond**, even if the data might not be **up-to-date**, prioritize making it **highly available**. If your priority is that data should always be **accurate and consistent**, design the system to ensure **data consistency** but be prepared for it to potentially become **unavailable during network issues**.
+
+
+## Consistency Patterns
+
+True Consistency = Every read receives the most recent write or an error.
+
+
+#### Weak consistency
+* After a write, reads may or may not see it. A best effort approach is taken.
+* This approach is seen in systems such as memcached. Weak consistency works well in real time use cases such as VoIP, video chat, and realtime multiplayer games. For example, if you are on a phone call and lose reception for a few seconds, when you regain connection you do not hear what was spoken during connection loss.
+
+#### 
