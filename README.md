@@ -237,3 +237,10 @@ This is where I left off on that google page
 * RAM (random access memory) is directly connected to the CPU, it's much much much faster than Disk, 1/10^6 seconds.
 ## Cache (MB)
 * Cache is even faster than ram 1/10^9 of a second
+
+## Networking REview
+
+* HTTP = Applicatin Layer
+* TCP = Transport Layer (makes sure data sent by IP is in the right order and reformed)
+* IP = Network Layer (routing and addressing of sent packets)
+<img width="733" alt="Screenshot 2024-11-04 at 4 28 21 PM" src="https://github.com/user-attachments/assets/dc886861-2c7a-48ca-bd6d-5cff10dd0490">
