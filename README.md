@@ -307,3 +307,53 @@ This is where I left off on that google page
 * it sends info in protocol buffers, sends it as binary
 * protocol buffers are then converted to objects in your language of choice
 * has a specified schema for request and response
+
+## Cache
+* descreases network cost
+* We store **static** content in the local disk/cache
+* either "hits" and "miss"
+* Cache ration is (hit / hit + miss), we want a high cache ratio 
+#### Broswer Cache
+* Chrome stores cache data on the client's local disk
+* This can be cleared by the client
+#### Server Cache
+* CDN or Content Delivery Networks can put static content closer to the clients
+* This cannot be cleared by the client
+#### CDN
+* CDN can only store **Static** content
+* **AWS Cloudfront** edge locations, howver, CAN do computation. (Ex: Lambda at Edge)
+
+## Redit / Memcached
+* regardless of where its stored, (the main server's memory/RAM or a separate server's memory/RAM), it's always stored in **RAM / MEMORY**
+* Getting data off of RAM is always faster than a disk
+* In-memory caches like Redis or Memcached can typically handle hundreds of thousands to millions of reads per second
+* Traditional disk-based databases (e.g., MySQL, PostgreSQL) generally handle thousands to tens of thousands of reads per second
+* about 100x faster
+
+
+### **Write-Around Cache**
+- **Process**: Data is written directly to the **database**, not the cache.
+- **Reading**: Data is read from the **cache**. If the data is not present (a cache miss), it is fetched from the **database** and then added to the cache for future reads.
+- **Pros**: Reduces the load on the cache for infrequently accessed data.
+- **Cons**: High **cache miss rate** initially, which can result in slower reads until the cache is populated.
+* better for majority writes
+
+### **Write-Through Cache**
+- **Process**: Data is written to the **cache** first and then **immediately** written to the **database** as well.
+- **Reading**: Data is read from the **cache**.
+- **Pros**: Ensures that the **cache and database** are always in sync, reducing cache misses.
+- **Cons**: Slightly slower write operations due to dual writes to both the cache and the database.
+* better for majority reads
+
+### **Write-Back Cache (Write-Behind Cache)**
+- **Process**: Data is written to the **cache** first, and the write to the **database** is deferred and done asynchronously at a later time.
+- **Reading**: Data is read from the **cache**.
+- **Pros**: Faster write performance because the write operation completes once the cache is updated. Reduces database load by batching writes.
+- **Cons**: Risk of data loss if the cache fails before the data is written to the database. Data inconsistency can occur if the database is not updated in time.
+* This would work for things like "liking" a post on twitter, since it's not imporant if it's lost, bad for "posting" a tweet though
+
+### Eviction Policies
+* FIFO: good for data that's less accessed as time goes on
+* LRU (least recently used): if something gets read, it goes to top of FIFO
+* LFU (least frequently used): # of times its used is tracked, we remove the least "popular" tweet
+* problem with LFU is that the value doesn't reset automatically, so we might keep caching old popular stuff
