@@ -240,7 +240,69 @@ This is where I left off on that google page
 
 ## Networking REview
 
-* HTTP = Applicatin Layer
-* TCP = Transport Layer (makes sure data sent by IP is in the right order and reformed)
-* IP = Network Layer (routing and addressing of sent packets)
+* HTTP = Applicatin Layer (in green in picture, it's all in one packet here)
+* TCP = Transport Layer (makes sure data sent by IP is in the right order and reformed, put in the TCP header)
+* IP = Network Layer (routing and addressing of sent packets, put in the IP header)
 <img width="733" alt="Screenshot 2024-11-04 at 4 28 21 PM" src="https://github.com/user-attachments/assets/dc886861-2c7a-48ca-bd6d-5cff10dd0490">
+
+### UDP vs TCP
+* TCP has a 3 way handshake
+* TCP takes more time, and establishes a connection before sending
+* sends in order, and resends missing packets
+
+* UDP is connectionless
+* Fast
+* No guarentee that every packet of data will arrive (or maybe not in order)
+
+## DNS
+
+<img width="724" alt="Screenshot 2024-11-04 at 6 11 34 PM" src="https://github.com/user-attachments/assets/dd28e6ca-e58c-4153-a197-220dfd2e9beb">
+
+#### A Records
+"Google.com" -> IP Address
+
+## APIs
+
+* APIs have optional parameters remember
+* **pagination** is very imporant in API design, so you don't accidentaly grab way too much data
+
+#### Rest API
+* needs to say what the response looks like
+* stateless (doesn't need previous information, all that is in the request)
+* So like if we need 10 videos and then the next 10 videos, we would PASS PAGINATION into the query parameters
+* as opposed to clicking "next 10" twice with no query parameters
+
+* Resource-Based: REST APIs are built around resources (e.g., users, products), which are represented by URIs (Uniform Resource Identifiers).
+* Standard HTTP Methods: Uses standard HTTP methods such as GET, POST, PUT, DELETE to perform CRUD (Create, Read, Update, Delete) operations.
+* Uniform Interface: REST adheres to a consistent and uniform set of rules, making it easy to understand and interact with.
+
+#### HTTP
+* request response protocol
+* HTTP is built on top of TCP
+* slower since we have a send a request every time we make a call
+
+#### Web Socket
+* Full-Duplex Communication: WebSocket provides a persistent, two-way connection between the client and server. Both parties can send and receive data at any time after the connection is established.
+* Persistent Connection: The connection remains open, allowing for real-time, continuous communication.
+
+#### HTTP2
+* http with multiple data streams
+* neetcode.io says it makes web sockets "obsolete"
+
+<img width="512" alt="Screenshot 2024-11-04 at 6 38 37 PM" src="https://github.com/user-attachments/assets/597dc5ac-328c-46f9-8662-9fd6b7f64224">
+
+#### GraphQL
+* built ontop of HTTP
+* fixes overfetching
+* aka maybe ONLY the user's name and not the ENTIRE user
+* fixes underfetching
+* allows more data to be grabbed per call, group requests into one request
+
+#### gRPC
+* built ontop of HTTP2
+* must be queried from a proxy, gRPC needs fine grained control which you can't do browser
+* generally server to server
+* It's objectively fster than REST
+* it sends info in protocol buffers, sends it as binary
+* protocol buffers are then converted to objects in your language of choice
+* has a specified schema for request and response
