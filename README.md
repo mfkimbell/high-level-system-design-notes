@@ -265,6 +265,7 @@ This is where I left off on that google page
 
 * APIs have optional parameters remember
 * **pagination** is very imporant in API design, so you don't accidentaly grab way too much data
+* **GETS** are **Idempotent**, meaning we ALWAYS get the same response back from the same query
 
 #### Rest API
 * needs to say what the response looks like
