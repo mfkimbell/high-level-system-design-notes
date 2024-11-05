@@ -317,11 +317,19 @@ This is where I left off on that google page
 * Chrome stores cache data on the client's local disk
 * This can be cleared by the client
 #### Server Cache
-* CDN or Content Delivery Networks can put static content closer to the clients
+* Regional storage of data in RAM or Memory of servers
 * This cannot be cleared by the client
-#### CDN
-* CDN can only store **Static** content
+#### CDN (Content Delivery Network)
+* CDN can only store **Static** content. (images, videos, html, js)
+* We WOULD do this for all the data in the Origin Server, but some data will be different for each user: we wouldn't store dynamic content, like a twitter feed, or very secure content, like passwords
+* Some requests are marked "prviate" meaning they aren't allowed on CDN (passwords)
+* Fouses on Global delivery of content
+* Removes strain on the **Origin Server** and increases availability
 * **AWS Cloudfront** edge locations, howver, CAN do computation. (Ex: Lambda at Edge)
+#### CDN Pull vs Push
+* Push means when the origin server recieves a request, it pushes to **all** CDN nodes
+* Pull acts more like a traditional cache, only updating the CDN where a request is made with the data it requested
+* Pull makes a reqeust to CDN, has a miss, and then acts as a proxy, sending the response to the Origin Server
 
 ## Redit / Memcached
 * regardless of where its stored, (the main server's memory/RAM or a separate server's memory/RAM), it's always stored in **RAM / MEMORY**
@@ -357,3 +365,12 @@ This is where I left off on that google page
 * LRU (least recently used): if something gets read, it goes to top of FIFO
 * LFU (least frequently used): # of times its used is tracked, we remove the least "popular" tweet
 * problem with LFU is that the value doesn't reset automatically, so we might keep caching old popular stuff
+
+## Proxies
+
+#### Reverse Proxy
+* NGINX
+* Directs traffic for the backend, middleman on behalf of the servers
+#### Forward Proxy
+* HideMyAss, Regions Bank Forward Proxy
+* Can be used to make the user anonymous (the server acts as the user), or can be used to hide/monitor requests (like a business blacklisting certian websites)
