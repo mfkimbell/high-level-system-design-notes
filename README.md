@@ -463,3 +463,9 @@ This is where I left off on that google page
 * **No Duplicates**, Ex: AWS S3 buckets must be **Global**
 * Meant to store large viles ex: photo and video
 
+## Message/Event Queues
+* decouples parts of the application (producers/consumers)
+* Bulk processing
+* Asyncronous processing
+* Allows for pub/sub systems, queue publishes to many subscribers
+* Example: A new user signup event is sent to the queue, with multiple subscribers handling different tasks: Database Service saves user data, Email Service sends a welcome email, Analytics Service logs the signup event.
