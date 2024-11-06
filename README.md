@@ -103,27 +103,68 @@ In summary, SQL databases simplify querying related data with native joins, whil
 
 SQL/ACID systems
 * **ACID** (atomicity, consistency, isolation, and durability)
+##### **It becomes difficult to SCALE HORIZONTALLY for Relational databases because of maintaining ACID properties**
 * ACID systems are called **Transactional Systems**
+<img width="453" alt="Screenshot 2024-11-05 at 5 51 20 PM" src="https://github.com/user-attachments/assets/2836c90e-9435-4699-b8f4-69dd35d7f0a3">
+
 * Atomicity: Transactions are treated as a single, indivisible unit. Either all operations within the transaction succeed, or none of them do.
 Example: Transferring money between bank accounts. If the withdrawal from one account succeeds but the deposit into another fails, the entire transaction is rolled back to maintain consistency.
 * Consistency: Transactions must maintain the consistency of the database. Data should meet all rules and constraints before and after the transaction.
 Example: In a reservation system, booking a seat only if it's available ensures that no two customers book the same seat simultaneously.
 * Isolation: Transactions are isolated from each other to prevent interference. Concurrent transactions should not impact each other's outcomes.
+* If we remove 500 from Bob's account, if bob checks his bank account right after that starts, it wouldn't change (dirty read), we do them in SEQUENCE to prevent this
 Example: Simultaneous bank transfers from the same account should not interfere with each other, ensuring each transaction sees a consistent view of the data.
 * Durability: Committed transactions are permanently saved and survive system failures. Once a transaction is committed, its changes remain even after a power outage or crash.
 Example: After confirming a purchase online, ensuring that the transaction is saved and the goods are allocated, even if there's a temporary network failure.
+(As opposed to RAM)
 
+## NoSQL
+* Follows **BaSE** (eventually consistency) instead of ACID 
+* To scale, we can divide our data and store them on different databases
+* ???
+#### Key Value Store
+* key value pairs like redis and memcached technically qualify
+#### Document store
+* Ex: MongoDB, DynamoDB
+* Json
+* key value store that can be nested
+#### Wide Column
+* Ex: Cassandra, Google Big Table
+* Optimal for writes
+* Good for low read/update requirements
+* Wide column stores often use an append-only model where new data is written sequentially to disk without altering existing data structures. This makes write operations extremely efficient and minimizes disk I/O.
+#### Graph Databases
+* Ex: Neo4j
+* all about graph based relations, IE Facebook
 
 ## Considerations:
 * Choose SQL: For transactional systems, secure and consistent data needs, complex queries, and strong data integrity requirements.
 
 * Choose NoSQL: For high scalability, flexibility in data modeling, handling big data, high availability, and agile development with evolving data structures.
 
+## Database Replication
+#### Leader -> Follower Replication
+* Followers can also act as leaders so they don't all need to directly talk to the leader, they can do a chain reaction
+* Great for **Scaling Reads**
+#### Leader <-> Leader Replication
+* Great for **Scaling Writes**
+* ex: Lets say we have a leader in each country where languages differ, the data MIGHT not be relevant for people in the other country, so the consistency might not matter as much
+* suffers with **Consistency** when async
+* suffers with **Latency** when syncronouse
+
 ## Database Sharding
 
 DynamoDB and similar NoSQL databases (like Cassandra or MongoDB) handle sharding automatically based on partition keys, ideal for distributed architectures.
 
-Relational databases generally do not do this by default. 
+**Range Based Sharding**
+* A-L goes to one databse
+* K-Z goes to the other database
+**Hash Based Sharding**
+* spreads evenly
+* cosistent hashing
+* Usually just chooses a primary key
+
+##### NoSQL Generally does this by Default. Relational databases CAN but not by default. 
 
 When to Use Sharding:
 
@@ -178,7 +219,21 @@ Single vs. Batch Processing:
 
 ## Availability vs Consistency
 
-**CAP theorem** states that in a **distributed system**, you can only achieve **two out of three** guarantees: **consistency** (all nodes see the same data), **availability** (every request gets a response), and **partition tolerance** (the system works despite network failures).
+#### PACELC
+* Given P (partition) choose A (availability) or C (consistency)
+* E (else) choose between L (latency) or C (consistency)
+* This is talking about the differency between L (eventual/weak consitency) vs C (strong consistency)
+
+
+
+#### CAP theorem
+* Only really applies to replicated data
+
+states that in a **distributed system**, you can only achieve **two out of three** guarantees: **consistency** (all nodes see the same data), **availability** (every request gets a response), and **partition tolerance** (the system works despite network failures).
+
+* Normal systems will always at LEAST maintain partition tolerance (people can continue to use the service)
+* Availability means every signle database node can respond to requests
+* Therefore we can either choose for partitioned nodes to be **Availible and inconsitent** or **Unavailable for application consistency**
 
 ##### Real-Life Handling of Partition Tolerance
 
@@ -212,16 +267,19 @@ True Consistency = Every read receives the most recent write or an error.
 
 
 #### Weak consistency
+* **Asyncronous**
 * After a write, reads may or may not see it. A best effort approach is taken.
 * This approach is seen in systems such as memcached. Weak consistency works well in real time use cases such as VoIP, video chat, and realtime multiplayer games. For example, if you are on a phone call and lose reception for a few seconds, when you regain connection you do not hear what was spoken during connection loss.
 
 #### Eventual consistency
-
+* **Asyncronous**
+* Generally have one master database, and other follower databases. 
 Eventual consistency means there is a window of time after a write operation where the data might not be the same across all copies of the database. During this period, different nodes or replicas may show different versions of the data, leading to potential inconsistencies.
 * usually a few milliseconds between write and data replication/sychronization
 
 #### Strong consistency
-* data is replicated synchronously
+* **Syncronous**
+* data is replicated synchronously, but **increases latency**
 * Leader-Based Replication: Distributed databases with a primary-replica (leader-follower) architecture often enforce strong consistency by requiring all writes to go through the leader.
 * reads may be delayed until all writes are completed 
 
@@ -369,8 +427,39 @@ This is where I left off on that google page
 ## Proxies
 
 #### Reverse Proxy
-* NGINX
+* NGINX, Load Balancers
 * Directs traffic for the backend, middleman on behalf of the servers
 #### Forward Proxy
-* HideMyAss, Regions Bank Forward Proxy
+* Regions Bank Forward Proxy, VPNs
 * Can be used to make the user anonymous (the server acts as the user), or can be used to hide/monitor requests (like a business blacklisting certian websites)
+* VPNs act aas a forward proxy, hiding the user (but it also encrypts data)
+
+## Load Balancer
+* Round Robin Approach: Send it to all servers before sending it to the same one again
+* Weighted Round Robin: Certain servers get a larger percentage
+* Least Connections: least people connected to that server (connected = request being processed)
+* Location Based
+
+#### Layer 4 Network Load Balancer
+* Layer 4 = TCP
+* Network Load Balancer
+* Can use IP for location or round robin
+* NO ACCESS TO APPLICATION OR HTTP
+
+#### Layer 7 Application Load Balancer
+* Uses HTTP
+* Does have access to the data, and can route based on reqeusts
+* Could send requests to different kinds of servers, not just duplicates
+
+#### Consistent Hashing
+* this way, we can send the same user to the same server every time, and each user can access the same cache every visit
+<img width="707" alt="Screenshot 2024-11-05 at 4 37 50 PM" src="https://github.com/user-attachments/assets/e3b534cf-79a8-461e-b8ac-810bfe7a74be">
+
+
+#### Object Storage
+* AWS S3, Azure Blob Storage
+* Illusion of a file system
+* You can write or read, but **can't update*
+* **No Duplicates**, Ex: AWS S3 buckets must be **Global**
+* Meant to store large viles ex: photo and video
+
