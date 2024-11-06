@@ -105,7 +105,7 @@ SQL/ACID systems
 * **ACID** (atomicity, consistency, isolation, and durability)
 ##### **It becomes difficult to SCALE HORIZONTALLY for Relational databases because of maintaining ACID properties**
 * ACID systems are called **Transactional Systems**
-<img width="453" alt="Screenshot 2024-11-05 at 5 51 20 PM" src="https://github.com/user-attachments/assets/2836c90e-9435-4699-b8f4-69dd35d7f0a3">
+**Transaction** = { begin, call, call, call, call, ..., end}
 
 * Atomicity: Transactions are treated as a single, indivisible unit. Either all operations within the transaction succeed, or none of them do.
 Example: Transferring money between bank accounts. If the withdrawal from one account succeeds but the deposit into another fails, the entire transaction is rolled back to maintain consistency.
@@ -377,17 +377,34 @@ This is where I left off on that google page
 #### Server Cache
 * Regional storage of data in RAM or Memory of servers
 * This cannot be cleared by the client
+
+  
 #### CDN (Content Delivery Network)
+* Globally distributed network of proxy servers
+Serving content from CDNs can significantly improve performance in two ways:
+1. Users receive content from data centers close to them
+2. Your servers do not have to serve requests that the CDN fulfills
+
 * CDN can only store **Static** content. (images, videos, html, js)
+* CDNs are best utliized when your application has a lot of static content to deliver
 * We WOULD do this for all the data in the Origin Server, but some data will be different for each user: we wouldn't store dynamic content, like a twitter feed, or very secure content, like passwords
 * Some requests are marked "prviate" meaning they aren't allowed on CDN (passwords)
 * Fouses on Global delivery of content
 * Removes strain on the **Origin Server** and increases availability
-* **AWS Cloudfront** edge locations, howver, CAN do computation. (Ex: Lambda at Edge)
+* **AWS Cloudfront** edge locations, howver, CAN do computation/dynamic content. (Ex: Lambda at Edge)
+
+
 #### CDN Pull vs Push
-* Push means when the origin server recieves a request, it pushes to **all** CDN nodes
-* Pull acts more like a traditional cache, only updating the CDN where a request is made with the data it requested
+* Push CDNs means when the origin server recieves a request, it pushes to **all** CDN nodes
+* Pull CDNs acts more like a traditional cache, only updating the CDN where a request is made with the data it requested
 * Pull makes a reqeust to CDN, has a miss, and then acts as a proxy, sending the response to the Origin Server
+* sites with **heavy traffic** favor **Pull CDNS**
+* **TTL (Time to Live)** Decides when the cached content gets removed. Could be every hour for exmaple. 
+
+#### Disadvantage(s)
+* CDN costs could be significant depending on traffic, although this should be weighed with additional costs you would incur not using a CDN.
+* Content might be stale if it is updated before the TTL expires it.
+* CDNs require changing URLs for static content to point to the CDN.
 
 ## Redit / Memcached
 * regardless of where its stored, (the main server's memory/RAM or a separate server's memory/RAM), it's always stored in **RAM / MEMORY**
@@ -481,3 +498,56 @@ This is where I left off on that google page
 
 ## Map Reduce
 * Modern times we use a "Spark cluster" for batch processing
+
+## Availability patterns
+
+
+
+
+### Failover
+###### Advantages:
+* when you server goes down, another server can pick up the work and clients don't see any downtime
+###### Disadvantages:
+* Fail-over adds more hardware and additional complexity.
+* There is a potential for loss of data if the active system fails before any newly written data can be replicated to the passive.
+
+#### Active-passive Failover
+* With active-passive fail-over, heartbeats are sent between the active and the passive server on standby. If the heartbeat is interrupted, the passive server takes over the active's IP address and resumes service.
+* Also known as master-slave failover
+#### Active-Active Failover
+* If the servers are public-facing, the DNS would need to know about the public IPs of both servers.
+* In this case, DNS health checks determine which server to send traffic to
+* If the servers are internal-facing, application logic would need to know about both servers.
+* In cloud environments, internal-facing services often use private IP addresses or internal load balancers, which means that only services within the same network or virtual private cloud (VPC) can communicate with them.
+* Active-active failover can also be referred to as master-master failover.
+
+### Replication
+discussed in database section 
+
+### Availability in parallel vs in sequence
+* If a service consists of multiple components prone to failure, the service's overall availability depends on whether the components are in sequence or in parallel.
+
+## DNS
+<img width="932" alt="Screenshot 2024-11-06 at 2 13 02 PM" src="https://github.com/user-attachments/assets/a7c94235-c600-4e27-ad6d-9c489626da8a">
+
+* 1. Initial Request: The user device (e.g., computer or smartphone) requests the IP address for www.google.com, which goes to the ISP DNS server (or any configured recursive resolver).
+* 2. ISP DNS Server Cache Check: If the ISP DNS server does not have the IP address in its cache, it needs to find the answer by querying further up the chain.
+* 3. Recursive Query to the Root DNS Server: The ISP DNS server contacts a root DNS server, which responds with a referral to the Top-Level Domain (TLD) DNS server (e.g., .com DNS server).
+* 4. Query to the TLD DNS Server: The ISP DNS server then contacts the TLD DNS server, which provides a referral to the authoritative name server for google.com.
+* 5. Authoritative Name Server Response: The authoritative name server for google.com holds the actual DNS records, such as A records, CNAME records, etc. It responds with the IP address for www.google.com (e.g., 173.194.115.96).
+* 6. ISP DNS Server Caches the Response: The ISP DNS server caches the response to serve future requests more quickly.
+* 7. Final Response to the User: The ISP DNS server sends the IP address back to the user's device, allowing it to connect to www.google.com.
+* NS record: example.com -> ns1.dnsprovider.com, ns2.dnsprovider.com (specifies the DNS servers for the domain) (DNS Servers hold A Records)
+* MX record: example.com -> mail.example.com (specifies the mail server for accepting messages) (SMTP = mail protocol)
+* A record: example.com -> 192.168.1.1 (points a domain to an IP address)
+* CNAME record: www.example.com -> example.com (points one domain name to another domain name) (Authoritative DNS Servers keep track of CNAME records)
+
+A DNS server for a domain is a server that translates domain names (e.g., example.com) into IP addresses (e.g., 192.168.1.1), allowing users to access websites using human-readable names instead of numerical IP addresses.
+
+## DNS Traffic Distribution
+* weighted round robin
+* geolocation based
+* latency based
+
+
+
