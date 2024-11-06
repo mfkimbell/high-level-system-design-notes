@@ -464,8 +464,20 @@ This is where I left off on that google page
 * Meant to store large viles ex: photo and video
 
 ## Message/Event Queues
+* Ex: RabbitMQ, Kafka
 * decouples parts of the application (producers/consumers)
 * Bulk processing
 * Asyncronous processing
 * Allows for pub/sub systems, queue publishes to many subscribers
 * Example: A new user signup event is sent to the queue, with multiple subscribers handling different tasks: Database Service saves user data, Email Service sends a welcome email, Analytics Service logs the signup event.
+* "Fanning out" to multiple topics
+
+## Data Processing
+
+#### Batch
+
+#### Streaming
+* Apache Flink
+
+## Map Reduce
+* Modern times we use a "Spark cluster" for batch processing
