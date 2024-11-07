@@ -444,6 +444,7 @@ Serving content from CDNs can significantly improve performance in two ways:
 ## Proxies
 
 #### Reverse Proxy
+* A reverse proxy is a web server that centralizes internal services and provides unified interfaces to the public.
 * NGINX, Load Balancers
 * Directs traffic for the backend, middleman on behalf of the servers
 #### Forward Proxy
