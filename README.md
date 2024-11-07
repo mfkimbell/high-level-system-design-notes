@@ -452,10 +452,29 @@ Serving content from CDNs can significantly improve performance in two ways:
 * VPNs act aas a forward proxy, hiding the user (but it also encrypts data)
 
 ## Load Balancer
+<img width="600" alt="Screenshot 2024-11-06 at 2 44 27 PM" src="https://github.com/user-attachments/assets/90da81db-c16b-4556-86d8-53835350ea3c">
+* Load balancers can be implemented with hardware (expensive) or with software such as HAProxy.
+* To protect against failures, it's common to set up multiple load balancers, either in active-passive or active-active mode.
+
+#### Horizontal scaling
+* Obviously helps with Horizontal Scaling of servers and services
+* Sessions can be stored in a centralized data store such as a database (SQL, NoSQL) or a persistent cache (Redis, Memcached)
+* Stateless Servers: For true horizontal scaling, servers should be stateless, meaning no server should hold session data locally. This allows any server to handle any user request without needing to stick to a specific server.
+#### DrawbacksHash-Based Session Distribution
+Scalability Limitations:
+* Non-stateful, can lead to complications when individual servers go down (could cause shuffling)
+* If a server fails, any sessions stored locally on that server are lost unless there is a backup mechanism.
+* This can lead to challenges in high availability and fault tolerance.
+
+If one server becomes overloaded with too many user sessions, distributing based on a hash can lead to imbalanced traffic.
+Adding or removing servers can disrupt the hash distribution and cause a "reshuffling" effect, where users are redirected to different servers, potentially losing their session data.
+#### Traffic Distribution
 * Round Robin Approach: Send it to all servers before sending it to the same one again
 * Weighted Round Robin: Certain servers get a larger percentage
 * Least Connections: least people connected to that server (connected = request being processed)
 * Location Based
+* Random
+* Based on Session Cookies
 
 #### Layer 4 Network Load Balancer
 * Layer 4 = TCP
@@ -467,6 +486,7 @@ Serving content from CDNs can significantly improve performance in two ways:
 * Uses HTTP
 * Does have access to the data, and can route based on reqeusts
 * Could send requests to different kinds of servers, not just duplicates
+* For example, a layer 7 load balancer can direct video traffic to servers that host videos while directing more sensitive user billing traffic to security-hardened servers.
 
 #### Consistent Hashing
 * this way, we can send the same user to the same server every time, and each user can access the same cache every visit
@@ -528,7 +548,7 @@ discussed in database section
 * If a service consists of multiple components prone to failure, the service's overall availability depends on whether the components are in sequence or in parallel.
 
 ## DNS
-<img width="932" alt="Screenshot 2024-11-06 at 2 13 02 PM" src="https://github.com/user-attachments/assets/a7c94235-c600-4e27-ad6d-9c489626da8a">
+<img width="900" alt="Screenshot 2024-11-06 at 2 13 02 PM" src="https://github.com/user-attachments/assets/a7c94235-c600-4e27-ad6d-9c489626da8a">
 
 * 1. Initial Request: The user device (e.g., computer or smartphone) requests the IP address for www.google.com, which goes to the ISP DNS server (or any configured recursive resolver).
 * 2. ISP DNS Server Cache Check: If the ISP DNS server does not have the IP address in its cache, it needs to find the answer by querying further up the chain.
