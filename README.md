@@ -107,6 +107,11 @@ SQL/ACID systems
 * ACID systems are called **Transactional Systems**
 **Transaction** = { begin, call, call, call, call, ..., end}
 
+* Atomicity - Each transaction is all or nothing
+* Consistency - Any transaction will bring the database from one valid state to another
+* Isolation - Executing transactions concurrently has the same results as if the transactions were executed serially
+* Durability - Once a transaction has been committed, it will remain so
+
 * Atomicity: Transactions are treated as a single, indivisible unit. Either all operations within the transaction succeed, or none of them do.
 Example: Transferring money between bank accounts. If the withdrawal from one account succeeds but the deposit into another fails, the entire transaction is rolled back to maintain consistency.
 * Consistency: Transactions must maintain the consistency of the database. Data should meet all rules and constraints before and after the transaction.
@@ -142,7 +147,8 @@ Example: After confirming a purchase online, ensuring that the transaction is sa
 
 * Choose NoSQL: For high scalability, flexibility in data modeling, handling big data, high availability, and agile development with evolving data structures.
 
-## Database Replication
+## Scaling Relational Databases (SQL)
+### Database Replication
 #### Leader -> Follower Replication
 * Followers can also act as leaders so they don't all need to directly talk to the leader, they can do a chain reaction
 * Great for **Scaling Reads**
@@ -152,7 +158,34 @@ Example: After confirming a purchase online, ensuring that the transaction is sa
 * suffers with **Consistency** when async
 * suffers with **Latency** when syncronouse
 
-## Database Sharding
+### Leader-Follower replication
+* One Leader node handles all the writes
+* There are many followers than can be used for reads
+#### Disadvantages
+* Complexity
+* Can't scale writes as well
+
+### Leader-Leader Replication
+* Multiple leaders can accept read and writes, they coordinate with each other
+#### Disadvantages
+* You'll need a load balancer or you'll need to make changes to your application logic to determine where to write
+* Most master-master systems are either loosely consistent (violating ACID) or have increased write latency due to synchronization.
+* Conflict resolution comes more into play as more write nodes are added and as latency increases.
+
+### Replication Disadvantages for Leader-Leader and Leader-Follower
+* There is a potential for loss of data if the leader fails before any newly written data can be replicated to other nodes.
+* Writes are replayed to the read replicas. If there are a lot of writes, the read replicas can get bogged down with replaying writes and can't do as many reads.
+
+### Federation (functional partioning) (SQL)
+* (or functional partitioning) splits up databases by function
+* For example, instead of a single, monolithic database, you could have three databases: forums, users, and products, resulting in less read and write traffic to each database and therefore less replication lag.
+* Joining data from two databases is more complex with a server link.
+Federation adds more hardware and additional complexity.
+
+### Database Sharding (SQL)
+* allows for less replication
+* allows for multiple sources for writing, and no latency for syncronization)
+* smaller database = faster queries
 
 DynamoDB and similar NoSQL databases (like Cassandra or MongoDB) handle sharding automatically based on partition keys, ideal for distributed architectures.
 
@@ -180,6 +213,24 @@ When Not to Use Sharding:
 * Cost Sensitivity: When the added infrastructure and management costs are prohibitive.
 * Strong Consistency Requirements: When cross-shard consistency is crucial and difficult to maintain.
 * Cross-shard Queries: When frequent multi-shard queries could degrade performance or complicate application logic.
+
+Summary of Trade-offs (sharding vs replication):
+It's important to note however, many times they are BOTH used at the same time, but leads to additional complexity
+* Sharding:
+* Pros: Scalability, reduced load per node, efficient caching.
+* Cons: Complex data management, rebalancing issues, potential hotspots.
+* Replication:
+* Pros: High availability, improved read performance, better cache hits.
+* Cons: Increased storage and cost, write performance impact, consistency challenges.
+
+### Denormalization (SQL)
+* Denormalization attempts to improve read performance at the expense of some write performance.
+* Redundant copies of the data are written in multiple tables to avoid expensive joins.
+* **Imporant when there are very complex join reads** and they outweigh the writes
+#### Disadvantages
+* Data is duplicated.
+* Redundant copies of information MUST stay in sync (unless it doesn't matter and can be eventual), which increases complexity of the database design.
+* A denormalized database under heavy write load might perform worse than its normalized counterpart.
 
 ## Caching
 * A cache is a simple key-value store and it should reside as a buffering layer between your application and your data storage.
@@ -443,11 +494,18 @@ Serving content from CDNs can significantly improve performance in two ways:
 
 ## Proxies
 
-#### Reverse Proxy
+## Reverse Proxy
+
+
 * A reverse proxy is a web server that centralizes internal services and provides unified interfaces to the public.
 * NGINX, Load Balancers
 * Directs traffic for the backend, middleman on behalf of the servers
-#### Forward Proxy
+#### Benefits
+* Increased security - Hide information about backend servers, blacklist IPs, limit number of connections per client
+* SSL termination - Decrypt incoming requests and encrypt server responses so backend servers do not have to perform these potentially expensive operations. Removes the need to install X.509 certificates on each server
+* Increased scalability and flexibility - Clients only see the reverse proxy's IP, allowing you to scale servers or change their configuration
+* Reverse proxies can be useful even with just one web server or application server, opening up the benefits described in the previous section. **(AS OPPOSED TO LOADBALANCER)**
+## Forward Proxy
 * Regions Bank Forward Proxy, VPNs
 * Can be used to make the user anonymous (the server acts as the user), or can be used to hide/monitor requests (like a business blacklisting certian websites)
 * VPNs act aas a forward proxy, hiding the user (but it also encrypts data)
@@ -570,5 +628,13 @@ A DNS server for a domain is a server that translates domain names (e.g., exampl
 * geolocation based
 * latency based
 
+## Application Layer
+* Separating out the web layer from the application layer (also known as platform layer) allows you to scale and configure both layers independently.
 
 
+## Microservices
+* Related to this discussion are microservices, which can be described as a suite of independently deployable, small, modular services. Each service runs a unique process and communicates through a well-defined, lightweight mechanism to serve a business goal.
+* 
+
+## Service Discovery
+* Systems such as Consul, Etcd, and **Zookeeper** can help services find each other by keeping track of registered names, addresses, and ports. 
