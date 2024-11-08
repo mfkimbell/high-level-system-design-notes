@@ -14,6 +14,7 @@ NeetCode.io
 * https://neetcode.io/practice
 * courses about system design, beginner and intermediate
 * might end up doing the ObjectOriented course too for practice
+* Has some good practice problems in his "intermediate" course
 * $120 bucks for a year
 
 HelloInterview: 
@@ -127,13 +128,21 @@ Example: After confirming a purchase online, ensuring that the transaction is sa
 * Follows **BaSE** (eventually consistency) instead of ACID 
 * To scale, we can divide our data and store them on different databases
 * ???
-#### Key Value Store
+#### Key Value Store (hash table)
 * key value pairs like redis and memcached technically qualify
+* Since they offer only a limited set of operations, complexity is shifted to the application layer if additional operations are needed.
 #### Document store
 * Ex: MongoDB, DynamoDB
-* Json
+* key-value store with documents stored as values
+* Json instead of a bare value
+* **Table = Collection, Row = Document**
 * key value store that can be nested
+* good for **occasionally changing data** so you don't have to continue to change database columns to amtchdata
+* 
 #### Wide Column
+<img width="953" alt="Screenshot 2024-11-08 at 1 11 09 PM" src="https://github.com/user-attachments/assets/2d850649-2039-45b2-95b5-df961eef1ead">
+* each item (identified by a row key) can indeed have data that spans multiple column families
+* Wide-column databases like Cassandra are specifically designed for write-heavy workloads. They use a log-structured merge-tree (LSM tree) storage model, which allows for fast, sequential writes to disk. 
 * Ex: Cassandra, Google Big Table
 * Optimal for writes
 * Good for low read/update requirements
@@ -142,10 +151,31 @@ Example: After confirming a purchase online, ensuring that the transaction is sa
 * Ex: Neo4j
 * all about graph based relations, IE Facebook
 
-## Considerations:
-* Choose SQL: For transactional systems, secure and consistent data needs, complex queries, and strong data integrity requirements.
+### Considerations:
+#### Choose SQL:
+* For transactional systems,
+* secure and consistent data needs,
+* complex queries
+* strong data integrity requirements.
 
-* Choose NoSQL: For high scalability, flexibility in data modeling, handling big data, high availability, and agile development with evolving data structures.
+#### Choose NoSQL:
+* For high scalability,
+* flexibility in data modeling,
+* handling big data, high availability,
+* agile development with evolving data structures.
+* storing many TB (PB) of data
+#### Example of NoSQL use cases:
+* Rapid ingest of clickstream and log data (noSQL are optimized for high write throughput)
+* Leaderboard or scoring data
+* Temporary data, such as a shopping cart (lots of writing, data constantly changes, good for session based data that is add and removed quickly)
+* (SQL IS BETTER FOR LONG TERM LOW WRITES DATA)
+* Frequently accessed ('hot') tables (WHEN WE USE CACHING OR EVENTUAL CONSISTENCY)
+* Metadata/lookup tables
+
+##### **SQL databases can use eventual consistency**
+* but it's less common, and breaks ACID
+* for instanc you can use read replicaas that might have stale data for SQL
+* Using **event-driven architectures or CQRS** (Command Query Responsibility Segregation), SQL databases can be part of a system that supports eventual consistency. In this pattern, the system separates read and write operations, and updates are propagated to read models asynchronously.
 
 ## Scaling Relational Databases (SQL)
 ### Database Replication
