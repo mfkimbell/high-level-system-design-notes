@@ -143,6 +143,7 @@ Example: After confirming a purchase online, ensuring that the transaction is sa
 * 
 #### Wide Column
 <img width="953" alt="Screenshot 2024-11-08 at 1 11 09 PM" src="https://github.com/user-attachments/assets/2d850649-2039-45b2-95b5-df961eef1ead">
+
 * each item (identified by a row key) can indeed have data that spans multiple column families
 * Wide-column databases like Cassandra are specifically designed for write-heavy workloads. They use a log-structured merge-tree (LSM tree) storage model, which allows for fast, sequential writes to disk. 
 * Ex: Cassandra, Google Big Table
