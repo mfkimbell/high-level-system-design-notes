@@ -30,12 +30,14 @@ DesignGuru:
 ## Read some real life examples of architechture
 * https://www.hiredintech.com/system-design/scalability/examples/
 * https://github.com/donnemartin/system-design-primer/blob/master/README.md#real-world-architectures
+* https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#company-architectures
 
 ## System Design Practice
 If you can’t find a friend/coworker, go to a site like HighScalability that contains tons of examples of real-life architectures and compare what you conjured up to what these companies actually did. You’d be surprised how many of the top websites’ architectures are widely available. Keep in mind that these systems were designed by multiple people over multiple months, so don’t expect to be able to come up with every low-level decision they made. Focus on the high-level stuff.
 * https://www.hiredintech.com/system-design/the-twitter-problem/
 * HelloInterview has practice problems, could be worth the 30 bucks
 * https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#system-design-interview-questions-with-solutions
+* https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#additional-system-design-interview-questions
 
 ## Object Oriented Design Practice
 * https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#object-oriented-design-interview-questions-with-solutions
@@ -267,6 +269,47 @@ It's important to note however, many times they are BOTH used at the same time, 
 * Whenever your application has to read data it should at first try to retrieve the data from your cache. Only if it’s not in the cache should it then try to get the data from the main data source.
 * cache is lightning-fast. It holds every dataset in RAM and requests are handled as fast as technically possible.
 
+## Caching Overview
+
+### Types of Caching
+* cache-aside (lazy loading):  Only requested data is cached, which avoids filling up the cache with data that isn't requested.
+* write-through: all writes go to cache
+* Write-behind (write-back): Add/update entry in cache, Asynchronously write entry to the data store, improving write performance
+* ^ aka you add the write operation to a async queue
+* Refresh-ahead: You can configure the cache to automatically refresh any recently accessed cache entry prior to its expiration.
+
+
+- **Client Caching**: Located on the client side (OS or browser) to reduce server load and improve response times.
+
+- **CDN (content delivery network) Caching**: A type of cache that stores content closer to users for faster delivery.
+
+- **Web Server Caching**:
+  - Reverse proxies (e.g., Varnish) can serve static and dynamic content directly.
+  - Web servers cache requests and serve responses without contacting the application server.
+
+- **Database Caching**:
+  - Built-in caching configurations are often included by default.
+  - Custom tuning can optimize for specific usage patterns.
+
+- **Application Caching**:
+  - In-memory caches (e.g., Memcached, Redis) act as key-value stores between the app and data storage.
+  - Faster than disk-based databases due to RAM storage.
+  - Uses cache invalidation algorithms (e.g., LRU) to manage limited RAM.
+
+### Redis Additional Features
+- **Persistence options**
+- **Built-in data structures**: Sorted sets, lists, etc.
+
+### Caching Levels
+- **Row-level**: Cache individual rows.
+- **Query-level**: Cache full query results.
+- **Objects**: Cache fully-formed serializable objects.
+- **HTML**: Cache fully-rendered HTML for quick delivery.
+
+### Best Practices
+- Avoid file-based caching for easier cloning and auto-scaling.
+
+
 Two types
 ### 1 - Cached Database Queries
 * That’s still the most commonly used caching pattern. Whenever you do a query to your database, you store the result dataset in cache. A hashed version of your query is the cache key.
@@ -406,11 +449,14 @@ This is where I left off on that google page
 * **pagination** is very imporant in API design, so you don't accidentaly grab way too much data
 * **GETS** are **Idempotent**, meaning we ALWAYS get the same response back from the same query
 
-#### Rest API
-* needs to say what the response looks like
+#### Representational state transfer (REST) API
+* Follows the CRUD verbs for data
+* needs to say what the response looks like (uses CORRECT status codes)
+* Representation through headers in REST means using HTTP headers like Accept and Content-Type to specify and negotiate the format of data exchanged between the client and server. 
 * stateless (doesn't need previous information, all that is in the request)
 * So like if we need 10 videos and then the next 10 videos, we would PASS PAGINATION into the query parameters
 * as opposed to clicking "next 10" twice with no query parameters
+* (HTML interface for HTTP) - your web service should be fully accessible in a browser.
 
 * Resource-Based: REST APIs are built around resources (e.g., users, products), which are represented by URIs (Uniform Resource Identifiers).
 * Standard HTTP Methods: Uses standard HTTP methods such as GET, POST, PUT, DELETE to perform CRUD (Create, Read, Update, Delete) operations.
@@ -667,4 +713,38 @@ A DNS server for a domain is a server that translates domain names (e.g., exampl
 * 
 
 ## Service Discovery
-* Systems such as Consul, Etcd, and **Zookeeper** can help services find each other by keeping track of registered names, addresses, and ports. 
+* Systems such as Consul, Etcd, and **Zookeeper** can help services find each other by keeping track of registered names, addresses, and ports.
+
+## Async
+
+## Message Queues
+* Back Pressure: setting a max to queue sizes, RAM gets overwhelmed and we end up doing more disks reads. They send a 503 service unavailable message
+
+## Remote procedure call (RPC)
+* In an RPC, a client causes a procedure to execute on a different address space, usually a remote server.
+* The procedure is coded as if it were a local procedure call, abstracting away the details of how to communicate with the server from the client program.
+* Remote calls are usually slower and less reliable than local calls so it is helpful to distinguish RPC calls from local calls.
+* Popular RPC frameworks include Protobuf, Thrift, and Avro.
+
+* 
+RPC frameworks like gRPC offer several advantages over traditional REST APIs for certain use cases, especially when it comes to performance, efficiency, and ease of use in distributed systems. Here’s why RPC (specifically gRPC) might be preferred over a typical API:
+
+1. Efficiency and Performance:
+* Binary Protocols: RPC frameworks like gRPC use Protocol Buffers (Protobuf) for data serialization, which is a compact binary format. * This makes data transmission much faster and more efficient compared to JSON used in REST, which is text-based and less space-efficient.
+2. Lower Latency:
+* Because gRPC uses a binary format and HTTP/2, it can achieve lower latency and faster communication compared to traditional REST APIs using HTTP/1.1.
+3. HTTP/2 Support:
+* Multiplexing: gRPC leverages HTTP/2, which allows multiple requests to be sent simultaneously over a single connection.
+* This reduces the overhead of establishing multiple connections and improves the performance of real-time and highly interactive applications.
+
+### Cons
+* HTTP APIs following REST tend to be used more often for public APIs.
+* RPC clients become tightly coupled to the service implementation.
+* A new API must be defined for every new operation or use case.
+* It can be difficult to debug RPC.
+
+## Security
+* Encrypt in transit and at rest.
+* Sanitize all user inputs or any input parameters exposed to user to prevent XSS and SQL injection.
+* Use parameterized queries to prevent SQL injection.
+* Use the principle of least privilege.
