@@ -1,7 +1,8 @@
-# system-design-notes
+# high-level-system-design-notes
 
 Good source for drawing diagrams:
 * https://excalidraw.com/
+
 
 
 Courses I've found:
@@ -41,7 +42,10 @@ If you can’t find a friend/coworker, go to a site like HighScalability that co
 
 ## Object Oriented Design Practice
 * https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#object-oriented-design-interview-questions-with-solutions
-* 
+
+##  Back of the envelop calculations
+* there are about 86k seconds in a day, but you can round to 100k for approximate calculations
+* KB = 1000 bytes, MB = 1,000,000, GB = 1billion bytes, TB = 1trillion bytes, PB = 1*10^15 bytes
 
 ## Mock interviews
 possibly a free service
