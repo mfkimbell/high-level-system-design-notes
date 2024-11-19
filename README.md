@@ -1,5 +1,11 @@
 # high-level-system-design-notes
 
+### Notes
+- **Package Managers**: NuGet (C#), PDM/Poetry (Python)  
+- **ORM**: Entity Framework Core (C#), SQLAlchemy (Python)  
+- **Migrations**: Entity Framework Core (C#), Alembic (Python)  
+
+
 Good source for drawing diagrams:
 * https://excalidraw.com/
 
