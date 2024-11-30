@@ -635,6 +635,8 @@ Adding or removing servers can disrupt the hash distribution and cause a "reshuf
 * For example, a layer 7 load balancer can direct video traffic to servers that host videos while directing more sensitive user billing traffic to security-hardened servers.
 
 #### Consistent Hashing
+Maps a `cirular hash store` so that removals don't cause shuffling
+
 * this way, we can send the same user to the same server every time, and each user can access the same cache every visit
 <img width="707" alt="Screenshot 2024-11-05 at 4 37 50 PM" src="https://github.com/user-attachments/assets/e3b534cf-79a8-461e-b8ac-810bfe7a74be">
 
