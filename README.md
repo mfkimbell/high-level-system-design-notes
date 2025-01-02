@@ -360,6 +360,7 @@ Single vs. Batch Processing:
 * E (else) choose between L (latency) or C (consistency)
 * This is talking about the differency between L (eventual/weak consitency) vs C (strong consistency)
 
+first part is CAP theorem, second part is eventual vs strong consistency
 
 
 #### CAP theorem
