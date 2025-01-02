@@ -235,6 +235,7 @@ DynamoDB and similar NoSQL databases (like Cassandra or MongoDB) handle sharding
 **Range Based Sharding**
 * A-L goes to one databse
 * K-Z goes to the other database
+
 **Hash Based Sharding**
 * spreads evenly
 * cosistent hashing
