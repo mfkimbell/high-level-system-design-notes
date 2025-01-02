@@ -356,7 +356,7 @@ Single vs. Batch Processing:
 ## Availability vs Consistency
 
 #### PACELC
-* Given P (partition) choose A (availability) or C (consistency)
+* Given P (network partition/outage) choose A (availability) or C (consistency)
 * E (else) choose between L (latency) or C (consistency)
 * This is talking about the differency between L (eventual/weak consitency) vs C (strong consistency)
 
