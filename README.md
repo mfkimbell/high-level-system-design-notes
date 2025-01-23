@@ -127,11 +127,15 @@ SQL/ACID systems
 
 * Atomicity: Transactions are treated as a single, indivisible unit. Either all operations within the transaction succeed, or none of them do.
 Example: Transferring money between bank accounts. If the withdrawal from one account succeeds but the deposit into another fails, the entire transaction is rolled back to maintain consistency.
+
 * Consistency: Transactions must maintain the consistency of the database. Data should meet all rules and constraints before and after the transaction.
 Example: In a reservation system, booking a seat only if it's available ensures that no two customers book the same seat simultaneously.
+
 * Isolation: Transactions are isolated from each other to prevent interference. Concurrent transactions should not impact each other's outcomes.
 * If we remove 500 from Bob's account, if bob checks his bank account right after that starts, it wouldn't change (dirty read), we do them in SEQUENCE to prevent this
 Example: Simultaneous bank transfers from the same account should not interfere with each other, ensuring each transaction sees a consistent view of the data.
+EXAMPLE: User A is transferring $100 from Account A to Account B, and at the same time, User B is querying Account A's balance. Isolation ensures that User B’s query does not see the intermediate state (e.g., where $100 has been debited from Account A but not yet credited to Account B).
+
 * Durability: Committed transactions are permanently saved and survive system failures. Once a transaction is committed, its changes remain even after a power outage or crash.
 Example: After confirming a purchase online, ensuring that the transaction is saved and the goods are allocated, even if there's a temporary network failure.
 (As opposed to RAM)
