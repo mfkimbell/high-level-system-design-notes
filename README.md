@@ -83,6 +83,11 @@ hello interview: $170
 * SQL = relational        can do joins in one query in the database
 * NoSQL = non-relational  needs to do multiple queries sometimes to get data
 
+** Why is NoSQL more scalable? **
+* They do sharding (horizontal paritioning) "out of the box" by choosing a "shard key" with consistent (circular) hashing AUTOMATICALLY (this is manual for relational databases)
+* The data is denormalized so you don't have to do joins (but this makes it so you have to handle it in the app logic if you need it) and you don't have to worry about schema syncronization.
+* It uses BASE instead of ACID (eventually consistency)
+
 **SQL Join**:
 ```sql
 SELECT orders.id, orders.date, customers.name, customers.email 
