@@ -77,6 +77,10 @@ hello interview: $170
 * Cost Constraints: The solution should be cost-effective to maintain.
 * Security Constraints: Must prevent malicious URLs and protect user data.
 
+## API Keys vs JWT
+* JWT are for frontend authenticaiotn, API is for backend/automation or server-to-server authentication
+* JWTs expire by default, API keys are used for peristent connection
+  
 
 ## SQL vs NOSQL
 
