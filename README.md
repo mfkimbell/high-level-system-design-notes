@@ -1,5 +1,18 @@
 # high-level-system-design-notes
 
+
+### Load Balancer v.s Reverse Proxy
+
+Your confusion is reasonable - they are often the same thing. But not always. When you refer to a load balancer you are referring to a very specific thing - a server or device that balances inbound requests across two or more web servers to spread the load. A reverse proxy, however, typically has any number of features:
+
+* load balancing: as discussed above
+
+* caching: it can cache content from the web server(s) behind it and thereby reduce the load on the web server(s) and return some static content back to the requester without having to get the data from the web server(s)
+
+* security: it can protect the web server(s) by preventing direct access from the internet; it might do this through simple means by just obfuscating the web server(s) or it may have some more active components that actually review inbound requests looking for malicious code
+
+* SSL acceleration: when SSL is used; it may serve as a termination point for those SSL sessions so that the workload of dealing with the encryption is offloaded from the web server(s)
+
 ### Notes
 - **Package Managers**: NuGet (C#), PDM/Poetry (Python)  
 - **ORM**: Entity Framework Core (C#), SQLAlchemy (Python)  
