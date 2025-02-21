@@ -1,5 +1,54 @@
 # high-level-system-design-notes
 
+### PostgreSQL
+* `psycopg2` is what you can use to connect with python
+* `sqlalchemy` uses psycopg2 under the hood
+
+Locally:
+`brew services start postgresql@14`
+`psql postgres`
+
+```sql
+\dt               -- List all tables
+\du               -- List all users (roles)
+\conninfo         -- Show current database connection info
+\c dbname         -- Connect to a specific database
+\dn               -- List all schemas
+\l                -- List all databases
+\dt schema.*      -- List tables in a specific schema
+\q                -- Quit psql
+SELECT current_user;    -- Show current user
+SELECT version();       -- Show PostgreSQL version
+\d tablename      -- Describe table structure
+\d+ tablename     -- Describe table with additional details
+\password username -- Change password for a user
+```
+create db
+
+```sql
+CREATE DATABASE testdb;
+\c testdb;
+```
+create table
+
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+insert user data
+
+```sql
+INSERT INTO users (username, email)
+VALUES 
+('alice', 'alice@example.com'),
+('bob', 'bob@example.com');
+```
+
+
 ### REST API vs NON REST
 
 * REST APIs are **STATELESS**, idempotent
