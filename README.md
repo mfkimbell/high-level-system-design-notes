@@ -213,7 +213,7 @@ SQL/ACID systems
 **Transaction** = { begin, call, call, call, call, ..., end}
 
 * Atomicity - Each transaction is all or nothing
-* Consistency - Any transaction will bring the database from one valid state to another
+* Consistency - Any transaction will bring the database from one valid state to another. (BUSINESS LOGIC)
 * Isolation - Executing transactions concurrently has the same results as if the transactions were executed serially
 * Durability - Once a transaction has been committed, it will remain so
 
@@ -222,6 +222,7 @@ Example: Transferring money between bank accounts. If the withdrawal from one ac
 
 * Consistency: Transactions must maintain the consistency of the database. Data should meet all rules and constraints before and after the transaction.
 Example: In a reservation system, booking a seat only if it's available ensures that no two customers book the same seat simultaneously.
+Even though SQL itself doesn’t magically “know” all your business rules, it provides features (like constraints and transactions) that allow you to encode those rules.
 
 * Isolation: Transactions are isolated from each other to prevent interference. Concurrent transactions should not impact each other's outcomes.
 * If we remove 500 from Bob's account, if bob checks his bank account right after that starts, it wouldn't change (dirty read), we do them in SEQUENCE to prevent this
