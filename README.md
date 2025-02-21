@@ -1,5 +1,26 @@
 # high-level-system-design-notes
 
+### REST API vs NON REST
+
+* REST APIs are **STATELESS**, idempotent
+Definition: Every request from the client must contain all the information the server needs to process it.
+The server does not store any information about the client between requests.
+Implement a Go-based API app utilizing DynamoDB storage.
+* uses standard CRUD operations mapped to HTTP methods:
+  
+<img width="541" alt="Screenshot 2025-02-20 at 6 25 40 PM" src="https://github.com/user-attachments/assets/a4ff1dac-c1d3-496b-b172-94fce443d92b" />
+
+Resource based URLs
+
+<img width="539" alt="Screenshot 2025-02-20 at 6 27 56 PM" src="https://github.com/user-attachments/assets/8842352b-4a42-494f-8554-6c0aa3620c14" />
+<img width="532" alt="Screenshot 2025-02-20 at 6 28 40 PM" src="https://github.com/user-attachments/assets/4719c301-4ee7-42ab-8a25-416e9209c30c" />
+
+Client-Server separation
+
+<img width="532" alt="Screenshot 2025-02-20 at 6 29 27 PM" src="https://github.com/user-attachments/assets/cdfeaaba-1fff-4fe7-80c2-ec372b5bfb1e" />
+
+#### What's a non-rest api? GRAPHQL
+* not REST because it breaks the uniform interface rule (no distinct endpoints for each resource).
 
 ### Load Balancer v.s Reverse Proxy
 
