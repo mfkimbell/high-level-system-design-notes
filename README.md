@@ -601,6 +601,7 @@ This is where I left off on that google page
 * FOCUSED ON **server to server**
 * It's objectively fster than REST
 * it sends info in protocol buffers, sends it as binary
+* protocol buffers are a request and response contract
 * protocol buffers are then converted to objects in your language of choice
 * has a specified schema for request and response
 
