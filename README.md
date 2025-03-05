@@ -595,9 +595,10 @@ This is where I left off on that google page
 * allows more data to be grabbed per call, group requests into one request
 
 #### gRPC
-* built ontop of HTTP2
-* must be queried from a proxy, gRPC needs fine grained control which you can't do browser
-* generally server to server
+* built ontop of HTTP2 
+* supports **multiple languages** (12 to be exact, Python, Java, Golang, etc...), so we can connect microservices with the SAME technology
+* (this is as opposed to using various http servers provided by each language)
+* FOCUSED ON **server to server**
 * It's objectively fster than REST
 * it sends info in protocol buffers, sends it as binary
 * protocol buffers are then converted to objects in your language of choice
