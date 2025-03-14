@@ -595,6 +595,10 @@ This is where I left off on that google page
 * allows more data to be grabbed per call, group requests into one request
 
 #### gRPC
+Faster cause of multiplexing and compression
+* Multiplexing (HTTP/2) → Multiple requests/responses in parallel without blocking.
+* Compression (Protobuf + HTTP/2 Header Compression) → Smaller, faster messages compared to JSON.
+
 * built ontop of HTTP2 
 * supports **multiple languages** (12 to be exact, Python, Java, Golang, etc...), so we can connect microservices with the SAME technology
 * (this is as opposed to using various http servers provided by each language)
